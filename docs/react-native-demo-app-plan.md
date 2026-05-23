@@ -229,46 +229,17 @@ This rule is intentionally simple. It can be refined after testing real meals.
 
 ## 9. Implementation Phases
 
-### Phase 1: Project Setup
+The implementation will be executed one phase at a time using the concrete
+phase plans in `docs/demo-phase-plan/`. Track status in
+`docs/demo-phase-plan/progress.md`.
 
-- Create `apps/mobile`.
-- Set up React Native with TypeScript.
-- Configure Expo development build.
-- Install and configure `react-native-ble-plx`.
-- Add iOS Bluetooth permission strings.
-- Add Android Bluetooth permissions, even if Android is tested later.
+Phase plans:
 
-### Phase 2: BLE Proof of Concept
-
-- Build scan/connect flow.
-- Connect to BOOKOO Themis Ultra.
-- Discover services and characteristics.
-- Subscribe to the weight characteristic.
-- Display raw payloads.
-- Confirm payload values using known weights.
-
-### Phase 3: Weight Adapter
-
-- Implement `BookooScaleAdapter`.
-- Decode weight in grams.
-- Add live weight subscription.
-- Add tare command if confirmed.
-- Add disconnect and reconnect handling.
-
-### Phase 4: Meal Capture Demo
-
-- Add live weight screen.
-- Add starting weight capture.
-- Add remaining weight capture.
-- Calculate consumed weight.
-- Add manual weight fallback.
-
-### Phase 5: Android Bring-Up
-
-- Validate Android BLE permissions.
-- Repeat scan/connect/live weight flow.
-- Fix platform-specific connection issues.
-- Keep protocol decoding shared across platforms.
+- [Phase 1: Project Setup](demo-phase-plan/01-project-setup.md)
+- [Phase 2: BLE Proof of Concept](demo-phase-plan/02-ble-proof-of-concept.md)
+- [Phase 3: Weight Adapter](demo-phase-plan/03-weight-adapter.md)
+- [Phase 4: Meal Capture Demo](demo-phase-plan/04-meal-capture-demo.md)
+- [Phase 5: Android Bring-Up](demo-phase-plan/05-android-bring-up.md)
 
 ## 10. Acceptance Criteria
 

@@ -39,6 +39,10 @@ Use TypeScript for app and package code. Prefer explicit modules, such as `Booko
 
 Before creating or changing any mobile app UI, agents MUST read and follow `docs/ui/react-native-demo-ui-requirements.md`. Those UI requirements are mandatory for the first demo app: keep the UI strict, functional, and BLE-workflow focused. Do not add screens, visual polish, marketing content, AI/nutrition mockups, or consumer-product flows that the UI requirements mark as out of scope.
 
+## Demo Phase Workflow
+
+When implementing the demo app, agents MUST work one phase at a time from `docs/demo-phase-plan/`. Before starting a phase, read that phase plan and `docs/demo-phase-plan/progress.md`. At the end of each phase, update `progress.md` with status, verification evidence, and blockers. Do not begin the next phase until the current phase's verification section has passed or the blocker is documented.
+
 ## Testing Guidelines
 
 Prioritize real-device BLE validation. The first target is a physical iPhone with the BOOKOO Themis Ultra. Follow the manual tests in `docs/react-native-demo-app-plan.md`: scan/connect, live weight, meal capture, and manual fallback. When automated tests are introduced, place them near the code under test and cover stabilization, consumed-weight calculation, and adapter state transitions.
