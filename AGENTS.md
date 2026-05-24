@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository currently contains planning docs for a discreet AI meal scale. `CONTEXT.md` is the source for product context, MVP scope, and safety constraints. `docs/react-native-demo-app-plan.md` describes the planned React Native BLE demo.
+This repository currently contains planning docs for a discreet AI meal scale. `CONTEXT.md` is the source for product context, MVP scope, and safety constraints. `docs/react-native-demo-app-plan.md` describes the planned React Native BLE demo, `docs/demo-phase-plan/` contains the phase-by-phase implementation plans, and `docs/demo-phase-plan/progress.md` tracks implementation status.
 
 When implementation begins, follow the planned structure:
 
@@ -27,8 +27,9 @@ There is no runnable app or `package.json` yet. Until scaffolded, use documentat
 After `apps/mobile` exists, run expected commands from that directory:
 
 - `npm install`: install app dependencies.
-- `npx expo run:ios`: build the Expo development app for iPhone.
-- `npx expo run:android`: validate Android after iOS BLE decoding works.
+- `npx expo run:ios`: build and launch the iOS development app, usually on an iOS Simulator.
+- `npx expo run:ios --device`: build and launch on a physical iPhone for real BOOKOO BLE validation.
+- `npx expo run:android`: validate Android emulator/device behavior after iOS BLE decoding works.
 - `npm test`: run the project test suite once configured.
 
 ## Coding Style & Naming Conventions
@@ -47,9 +48,13 @@ Before creating or changing any mobile app UI, agents MUST read and follow `docs
 
 When implementing the demo app, agents MUST work one phase at a time from `docs/demo-phase-plan/`. Before starting a phase, read that phase plan and `docs/demo-phase-plan/progress.md`. At the end of each phase, update `progress.md` with status, verification evidence, and blockers. Do not begin the next phase until the current phase's verification section has passed or the blocker is documented.
 
+## Simulator vs Device Validation
+
+iOS Simulator validation is required where the phase plans call for it, but it is limited to build, navigation, strict UI, mock scale behavior, manual fallback, and unavailable-BLE/error states. Agents MUST NOT mark real BLE scan, connect, service discovery, notifications, payload decoding, or tare validation complete from simulator results. Real BOOKOO BLE validation requires a physical iPhone and the BOOKOO Themis Ultra. Android emulator validation is similarly limited to build/UI/permission-state checks; real Android BLE validation requires a physical Android device.
+
 ## Testing Guidelines
 
-Prioritize real-device BLE validation. The first target is a physical iPhone with the BOOKOO Themis Ultra. Follow the manual tests in `docs/react-native-demo-app-plan.md`: scan/connect, live weight, meal capture, and manual fallback. When automated tests are introduced, place them near the code under test and cover stabilization, consumed-weight calculation, and adapter state transitions.
+Follow the verification section of the active phase plan in `docs/demo-phase-plan/`. Prioritize real-device BLE validation whenever a phase requires BLE behavior. The first real BLE target is a physical iPhone with the BOOKOO Themis Ultra. Use simulator validation only for the non-BLE checks allowed by the phase plan. When automated tests are introduced, place them near the code under test and cover generic scale manager behavior, adapter state transitions, stabilization, app-level zeroing, manual fallback, and consumed-weight calculation.
 
 ## Commit & Pull Request Guidelines
 
