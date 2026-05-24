@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "Smart Scale Demo",
+    "slug": "smart-scale-demo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "smart-scale-demo",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smartscale.demo",
+      "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "Allow Smart Scale Demo to scan for and connect to Bluetooth scales."
+      }
+    },
+    "android": {
+      "package": "com.smartscale.demo",
+      "permissions": [
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": false,
+          "neverForLocation": false,
+          "modes": [],
+          "bluetoothAlwaysPermission": "Allow Smart Scale Demo to scan for and connect to Bluetooth scales."
+        }
+      ]
+    ]
+  }
+}
