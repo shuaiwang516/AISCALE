@@ -10,7 +10,8 @@ manual fallback input.
 
 - Implement the Meal Capture view according to
   `docs/ui/react-native-demo-ui-requirements.md`.
-- Use decoded readings from `BookooScaleAdapter`.
+- Use decoded readings from the generic scale manager/interface.
+- Use `MockScaleAdapter` for simulator validation of the meal workflow.
 - Support manual input fallback when BLE is unavailable.
 - Warn when capturing unstable readings, but allow the user to continue.
 - Calculate consumed weight as:
@@ -22,6 +23,7 @@ manual fallback input.
 - Do not add photos, AI, calories, macros, nutrition guidance, history, auth, or
   backend persistence.
 - Keep meal calculation logic outside UI components.
+- Keep meal capture logic independent from any specific scale adapter.
 
 ## Instructions
 
@@ -46,7 +48,7 @@ manual fallback input.
    - `Clear manual input`
    - Warning for unstable readings
 5. Live reading behavior:
-   - Use latest adjusted live grams for capture.
+   - Use latest adjusted live grams from the generic scale state for capture.
    - Show warning when `stable` is false or unknown.
    - Allow user confirmation of unstable reading.
 6. Manual input behavior:
@@ -65,13 +67,23 @@ manual fallback input.
    - Manual input parses valid numeric grams.
    - Invalid manual input is rejected.
    - Reset clears meal state.
-9. Update `docs/demo-phase-plan/progress.md` with test evidence and meal-flow
-   notes.
+9. Run iOS Simulator validation:
+   - Complete meal capture with mock live readings.
+   - Complete meal capture with manual start and remaining weights.
+   - Confirm invalid manual input shows inline errors.
+   - Confirm consumed weight never displays negative.
+   - Confirm reset clears meal state without changing mock connection state.
+10. Run physical iPhone validation with BOOKOO live readings after simulator
+    validation passes.
+11. Update `docs/demo-phase-plan/progress.md` with simulator validation,
+    physical-device test evidence, and meal-flow notes.
 
 ## Verifications
 
 - With BLE connected, the user can record start weight from live grams.
 - With BLE connected, the user can record remaining weight from live grams.
+- On iOS Simulator, mock readings can complete the start/remain/consumed flow.
+- Meal Capture does not import `BookooScaleAdapter` or BOOKOO BLE constants.
 - Consumed weight displays correctly.
 - Consumed weight never displays as negative.
 - Manual input can complete the same flow with Bluetooth disabled.
@@ -79,7 +91,8 @@ manual fallback input.
 - Reset clears the meal flow without disconnecting the scale.
 - Unstable readings show a warning but do not block capture.
 - No AI, calories, macros, photos, history, account, or backend UI appears.
-- `docs/demo-phase-plan/progress.md` records Phase 4 verification notes.
+- `docs/demo-phase-plan/progress.md` records Phase 4 simulator and physical
+  iPhone verification notes.
 
 ## Completion Criteria
 

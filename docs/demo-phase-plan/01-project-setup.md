@@ -13,6 +13,10 @@ integration yet.
 - Use an Expo development build workflow, not Expo Go.
 - Prepare for `react-native-ble-plx`.
 - Add basic iOS and Android Bluetooth configuration.
+- Create a generic scale abstraction so screens and meal logic are not coupled
+  to BOOKOO-specific BLE details.
+- Support iOS Simulator validation for app shell, navigation, and non-BLE UI
+  behavior.
 - Create the strict four-view demo shell required by
   `docs/ui/react-native-demo-ui-requirements.md`:
   - Device
@@ -26,6 +30,8 @@ integration yet.
   - Last error message when available
 - Do not add onboarding, auth, backend, AI, nutrition, history, or marketing UI.
 - Add placeholder state only; do not fake a completed BLE integration.
+- Add a clearly labeled development-only mock scale path for simulator
+  validation; it must not be presented as a real BOOKOO connection.
 
 ## Instructions
 
@@ -71,22 +77,44 @@ integration yet.
    - Last live weight
    - Last error message
 10. Create initial TypeScript types for scale state:
+   - `ScaleAdapterId`
    - `ScaleConnectionState`
    - `ScaleDevice`
    - `ScaleReading`
+   - `ScaleCapabilities`
    - `ScaleAdapter`
-11. Add a `MockScaleAdapter` only if needed to make the shell testable without
-    the physical scale.
-12. Update `docs/demo-phase-plan/progress.md` when this phase is complete.
+11. Create a `ScaleManager` or equivalent adapter registry:
+    - It owns the active adapter.
+    - It exposes generic scan/connect/disconnect/tare/readings APIs.
+    - It is the only layer screens call for scale operations.
+    - It keeps adapter-specific device matching out of screens.
+12. Add a `MockScaleAdapter` for simulator validation and UI development:
+    - It must be clearly labeled as mock/dev state.
+    - It must not claim to be connected to a real BOOKOO scale.
+    - It should provide enough placeholder readings for later UI validation.
+13. Add a `ManualInputScaleAdapter` or equivalent manual-source path for
+    fallback behavior.
+14. Run initial iOS Simulator validation:
+    - Start the app with the iOS Simulator target.
+    - Confirm the app opens without Expo Go.
+    - Confirm navigation works across all four primary views.
+    - Confirm placeholder/mock status renders without BLE hardware.
+15. Update `docs/demo-phase-plan/progress.md` when this phase is complete.
 
 ## Verifications
 
 - From `apps/mobile`, dependency installation succeeds.
 - TypeScript compiles.
-- The app starts in an iOS simulator or on a physical iPhone.
+- The app starts in an iOS Simulator.
 - The app shows exactly the four required primary views.
 - Every primary view shows connection state, connected device name placeholder,
   last live weight placeholder, and last error placeholder.
+- Screens use the generic scale manager/interface rather than importing
+  `BookooScaleAdapter` or BOOKOO UUID constants.
+- The mock/dev scale path is visibly labeled and cannot be mistaken for a real
+  BOOKOO connection.
+- iOS Simulator validation is recorded in `progress.md` with simulator model and
+  iOS runtime version.
 - The UI follows `docs/ui/react-native-demo-ui-requirements.md`.
 - No screen contains AI, nutrition, account, subscription, or marketing content.
 - Bluetooth permissions/configuration are present for iOS and Android.

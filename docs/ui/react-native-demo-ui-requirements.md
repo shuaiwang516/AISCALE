@@ -3,7 +3,9 @@
 ## 1. UI Goal
 
 The first React Native app UI must behave like a strict BLE test tool for the
-BOOKOO Themis Ultra meal-scale workflow.
+meal-scale workflow. The first real target is BOOKOO Themis Ultra, but UI must
+stay generic enough to support a later custom BLE scale through the same
+adapter interface.
 
 The UI should be clean, readable, and reliable, but not polished like a
 consumer launch app. Its purpose is to make hardware testing repeatable:
@@ -70,7 +72,8 @@ If no reading exists:
 
 ## 5. Device View Requirements
 
-Purpose: scan for and connect to the BOOKOO Themis Ultra.
+Purpose: scan for and connect to a supported scale. For the first MVP, the only
+real supported scale is BOOKOO Themis Ultra.
 
 Required elements:
 
@@ -79,7 +82,9 @@ Required elements:
 - Stop scan button while scanning
 - List of discovered devices
 - Device row showing name, device ID, RSSI if available, and whether it looks
-  like a BOOKOO device
+  like a supported device
+- Device row showing adapter/source label, such as `BOOKOO`, `Mock`, or
+  `Manual`
 - Connect button for each discovered device
 - Disconnect button when connected
 - Connection state message
@@ -88,8 +93,8 @@ Required elements:
 Restrictions:
 
 - Do not auto-connect without a visible user action.
-- Do not hide non-BOOKOO devices during early debugging; mark likely BOOKOO
-  devices instead.
+- Do not hide non-supported devices during early debugging; mark likely
+  supported devices instead.
 - Do not remove raw device IDs from the UI because they are useful during BLE
   debugging.
 
@@ -162,6 +167,7 @@ Purpose: make BLE protocol work observable.
 Required elements:
 
 - Connected device name and ID
+- Active adapter/source ID and label
 - Discovered services
 - Discovered characteristics
 - Raw notification payload log
@@ -195,6 +201,8 @@ Component restrictions:
 - Components must receive state through props.
 - Components must call explicit action callbacks.
 - Components must not directly decode payloads or calculate meal values.
+- Components and screens must not import adapter-specific UUIDs or payload
+  parsers.
 
 ## 10. Copy Rules
 

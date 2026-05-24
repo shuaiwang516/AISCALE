@@ -7,7 +7,7 @@ phases. Update it at the end of every phase and whenever a blocker is found.
 
 - Overall status: Not started
 - Current phase: Phase 1 - Project Setup
-- Last updated: 2026-05-22
+- Last updated: 2026-05-23
 - Target hardware: BOOKOO Themis Ultra
 - First validation platform: physical iPhone
 - Later validation platform: physical Android phone
@@ -30,6 +30,14 @@ Add dated notes here as each phase is worked.
 
 - Created phase plan documents.
 - No implementation started yet.
+
+### 2026-05-23
+
+- Added simulator validation requirements to the phase plans.
+- iOS Simulator is used for build, UI, mock-state, manual fallback, and
+  unavailable-BLE validation.
+- Physical iPhone remains required for real BOOKOO BLE scan/connect,
+  service/characteristic discovery, notifications, and weight decoding.
 
 ## Known Blockers
 

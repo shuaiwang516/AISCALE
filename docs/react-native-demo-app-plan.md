@@ -93,16 +93,21 @@ When the app implementation begins, use this structure:
     └── react-native-demo-app-plan.md
 ```
 
-For the first prototype, it is acceptable to keep the scale adapter inside
-`apps/mobile/src/bluetooth`. Move it into `packages/scale-adapters` once the
-interface stabilizes or Android support starts.
+For the first prototype, keep the scale abstraction inside
+`apps/mobile/src/bluetooth`. The app must still be written as if BOOKOO is only
+the first supported adapter. Move the abstraction and adapters into
+`packages/scale-adapters` once the interface stabilizes or Android support
+starts.
 
 ## 5. Scale Adapter Design
 
 Define a common adapter interface so the app is not tightly coupled to one
-scale implementation.
+scale implementation. Screens, UI components, and meal logic must depend on
+this generic interface, not on `BookooScaleAdapter` directly.
 
 ```ts
+export type ScaleAdapterId = "bookoo-themis-ultra" | "mock" | "manual" | string;
+
 export type ScaleConnectionState =
   | "idle"
   | "scanning"
@@ -114,11 +119,30 @@ export type ScaleConnectionState =
 export type ScaleReading = {
   grams: number;
   stable: boolean;
+  source: ScaleAdapterId;
   rawPayload?: string;
   receivedAt: string;
 };
 
+export type ScaleDevice = {
+  id: string;
+  name: string | null;
+  rssi?: number | null;
+  adapterId: ScaleAdapterId;
+  isLikelySupported: boolean;
+};
+
+export type ScaleCapabilities = {
+  hardwareTare: boolean;
+  appZero: boolean;
+  batteryLevel: boolean;
+  rawPayloadLog: boolean;
+};
+
 export interface ScaleAdapter {
+  id: ScaleAdapterId;
+  label: string;
+  capabilities: ScaleCapabilities;
   scan(): Promise<ScaleDevice[]>;
   connect(deviceId: string): Promise<void>;
   disconnect(): Promise<void>;
@@ -134,10 +158,31 @@ Initial adapters:
 - `MockScaleAdapter`: simulated readings for UI development.
 - `ManualInputScaleAdapter`: fallback path for demos when BLE fails.
 
+Add adapters through a registry or manager:
+
+```text
+ScaleManager
+  - owns the active adapter
+  - exposes generic scan/connect/disconnect/tare/readings APIs to screens
+  - routes discovered devices to the correct adapter
+  - keeps adapter-specific UUIDs and payload parsing out of UI and meal logic
+```
+
+Future hardware transition rule:
+
+- To add a custom BLE scale later, create a new adapter such as
+  `CustomScaleAdapter`.
+- Register it with `ScaleManager`.
+- Do not change Device, Live Weight, Meal Capture, or Debug screens unless the
+  shared interface needs a deliberate versioned change.
+- Do not put device UUIDs, byte parsing, tare commands, or scale-specific names
+  inside UI components.
+
 ## 6. BOOKOO Themis Ultra BLE Notes
 
 Use the official BOOKOO open protocol as the source of truth during
-implementation.
+implementation. These details belong only inside the BOOKOO adapter and Debug
+metadata.
 
 Known starting points:
 
@@ -155,12 +200,14 @@ Implementation behavior:
 - Decode grams only after payload samples are confirmed against known weights.
 - Send tare through the command characteristic if confirmed with the real scale.
 - Keep manual tare in the app as a fallback if hardware tare is unreliable.
+- Do not leak BOOKOO UUIDs or payload parsing into shared screens or meal logic.
 
 ## 7. Demo Screens
 
 ### Device Screen
 
-Purpose: find and connect to the BOOKOO scale.
+Purpose: find and connect to a supported scale. For the first MVP, the only real
+supported scale is BOOKOO Themis Ultra.
 
 Required UI:
 
@@ -168,6 +215,7 @@ Required UI:
 - Scan button
 - List of discovered devices
 - Connect button per device
+- Adapter/source label per device, such as `BOOKOO`, `Mock`, or `Manual`
 - Current connection state
 - Last connection error, if any
 

@@ -35,6 +35,10 @@ After `apps/mobile` exists, run expected commands from that directory:
 
 Use TypeScript for app and package code. Prefer explicit modules, such as `BookooScaleAdapter`, `MockScaleAdapter`, and `ManualInputScaleAdapter`. Use `PascalCase` for React components and classes, `camelCase` for functions and variables, and `kebab-case` for documentation filenames. Keep BLE constants near the adapter that uses them. Preserve raw payload logging in debug paths.
 
+## Scale Adapter Boundary
+
+BOOKOO Themis Ultra is the first MVP device, not a permanent app dependency. Agents MUST keep screens, UI components, and meal logic dependent on a generic scale manager/interface, not directly on `BookooScaleAdapter` or BOOKOO UUID constants. Device-specific BLE UUIDs, payload parsing, tare commands, and matching rules belong inside the relevant adapter module. A future custom BLE scale should be addable by implementing and registering a new `ScaleAdapter`, without rewriting Device, Live Weight, Meal Capture, or Debug screens.
+
 ## Mandatory UI Requirements
 
 Before creating or changing any mobile app UI, agents MUST read and follow `docs/ui/react-native-demo-ui-requirements.md`. Those UI requirements are mandatory for the first demo app: keep the UI strict, functional, and BLE-workflow focused. Do not add screens, visual polish, marketing content, AI/nutrition mockups, or consumer-product flows that the UI requirements mark as out of scope.
